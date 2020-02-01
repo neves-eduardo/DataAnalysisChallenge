@@ -5,4 +5,5 @@ import java.util.List;
 
 public interface FileDAO {
     List<Path> readFiles();
+    Path writeFile(String fileName, String text);
 }
