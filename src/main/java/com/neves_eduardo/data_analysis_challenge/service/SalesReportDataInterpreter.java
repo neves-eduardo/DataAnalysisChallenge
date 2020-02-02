@@ -8,7 +8,9 @@ import com.neves_eduardo.data_analysis_challenge.dto.Salesman;
 
 import java.nio.file.Path;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class SalesReportDataInterpreter implements DataInterpreter {
     private FileDecoder salesReportFileDecoder;
@@ -29,19 +31,23 @@ public class SalesReportDataInterpreter implements DataInterpreter {
         int clients = salesReport.getCustomers().size();
         int salesmen = salesReport.getSalesmen().size();
         String worstSalesmanEver;
-        Map<String,Double> salesmenRank;
+        Map<String,Double> salesmenRank = new HashMap<>();
         for (Salesman salesman : salesReport.getSalesmen()) {
-            Double totalSales= salesReport
+            Double salesAmount= salesReport
                     .getSales()
                     .stream()
                     .filter(s ->s.getSalesmanName().equals(salesman.getName()))
                     .map(s -> s.getItems().stream().mapToDouble(i -> i.getPrice() * i.getQuantity()).sum())
                     .findFirst()
-                    .get();
+                    .orElse(0.0);
+            salesmenRank.put(salesman.getName(),salesAmount);
         }
+
+        worstSalesmanEver = salesmenRank.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.naturalOrder())).map(Map.Entry::getKey).collect(Collectors.toList()).get(0);
+
         Comparator<Sale> getMostExpensiveSale = Comparator.comparingDouble((s -> s.getItems().stream().mapToDouble(i -> i.getPrice() * i.getQuantity()).sum()));
         int mostExpensiveSaleID = salesReport.getSales().stream().max(getMostExpensiveSale).get().getSaleId();
 
-        return String.format(OUTPUT_TEMPLATE,clients,salesmen,mostExpensiveSaleID,"a");
+        return String.format(OUTPUT_TEMPLATE,clients,salesmen,mostExpensiveSaleID,worstSalesmanEver);
     }
 }

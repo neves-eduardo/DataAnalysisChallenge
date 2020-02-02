@@ -28,6 +28,7 @@ public class SalesReportDataInterpreterTest {
         items1.add(new Item(1,100000000,100));
         ArrayList<Item> items2 = new ArrayList<>();
         items2.add(new Item(1,1,1000));
+        items2.add(new Item(1,10000,1000000000));
 
         Sale sale1 = new Sale(1,items1,"Joao");
         Sale sale2 = new Sale(2,items2,"Roger");
