@@ -4,6 +4,6 @@ import java.nio.file.Path;
 import java.util.List;
 
 public interface FileDAO {
-    List<Path> readFiles();
+    List<String> readFile(Path file);
     Path writeFile(String fileName, String text);
 }
