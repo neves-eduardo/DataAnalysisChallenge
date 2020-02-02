@@ -45,27 +45,24 @@ public class SalesReportFileDecoder implements FileDecoder {
 
 
     @Override
-    public SalesReport decode(Path file) throws IOException {
+    public SalesReport decodeFile(List<String> lines){
         SalesReport salesReport = new SalesReport();
-        List<String> content;
-        content = Files.readAllLines(file);
-
         salesReport.setSalesmen(
-                content
+                lines
                         .stream()
                         .filter(s -> s.startsWith(DataTypes.SALESMAN.getCode()))
                         .map(this::decodeSalesman)
                         .collect(Collectors.toList()));
 
         salesReport.setCustomers(
-                content
+                lines
                         .stream()
                         .filter(s -> s.startsWith(DataTypes.CUSTOMER.getCode()))
                         .map(this::decodeCustomer)
                         .collect(Collectors.toList()));
 
         salesReport.setSales(
-                content
+                lines
                         .stream()
                         .filter(s -> s.startsWith(DataTypes.SALE.getCode()))
                         .map(this::decodeSale)

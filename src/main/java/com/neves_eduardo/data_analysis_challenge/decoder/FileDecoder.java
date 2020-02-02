@@ -4,7 +4,8 @@ import com.neves_eduardo.data_analysis_challenge.dto.SalesReport;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 
 public interface FileDecoder {
-    SalesReport decode(Path file) throws IOException;
+    SalesReport decodeFile(List<String> lines) throws IOException;
 }
