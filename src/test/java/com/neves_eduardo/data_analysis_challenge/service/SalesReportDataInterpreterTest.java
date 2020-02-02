@@ -5,9 +5,11 @@ import com.neves_eduardo.data_analysis_challenge.decoder.FileDecoder;
 import com.neves_eduardo.data_analysis_challenge.dto.*;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -16,13 +18,12 @@ import java.util.Collections;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 
+@RunWith(MockitoJUnitRunner.class)
 public class SalesReportDataInterpreterTest {
-    @Mock
-    private FileDAO fileDAO;
     @Mock
     private FileDecoder fileDecoder;
     @InjectMocks
-    private SalesReportDataInterpreter salesReportDataInterpreter = new SalesReportDataInterpreter(fileDAO,fileDecoder);
+    private SalesReportDataInterpreter salesReportDataInterpreter = new SalesReportDataInterpreter(fileDecoder);
     private SalesReport salesReport;
     @Before
     public void init() {
@@ -43,13 +44,13 @@ public class SalesReportDataInterpreterTest {
         ArrayList<Salesman> salesmen = new ArrayList<>();
         salesmen.add(new Salesman("a","a",10));
         salesReport = new SalesReport(customers,sales,salesmen);
-
+        Mockito.when(fileDecoder.decodeFile(any())).thenReturn(salesReport);
 
     }
 
     @Test
     public void test() {
-        System.out.println(salesReportDataInterpreter.analyseData(salesReport));
+        System.out.println(salesReportDataInterpreter.analyseData(Paths.get("")));
     }
 
 }

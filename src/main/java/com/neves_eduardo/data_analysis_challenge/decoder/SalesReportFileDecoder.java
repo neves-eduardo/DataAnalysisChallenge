@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class SalesReportFileDecoder implements FileDecoder {
-
-    public SalesReportFileDecoder() {
-
+    private FileDAO fileDAO;
+    public SalesReportFileDecoder(FileDAO fileDAO) {
+        this.fileDAO = fileDAO;
     }
 
 
@@ -44,7 +44,8 @@ public class SalesReportFileDecoder implements FileDecoder {
 
 
     @Override
-    public SalesReport decodeFile(List<String> lines) {
+    public SalesReport decodeFile(Path file) {
+        List<String> lines = fileDAO.readFile(file);
         SalesReport salesReport = new SalesReport();
         salesReport.setSalesmen(
                 lines

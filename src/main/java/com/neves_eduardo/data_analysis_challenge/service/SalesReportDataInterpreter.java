@@ -12,7 +12,6 @@ import java.nio.file.Path;
 import java.util.Comparator;
 
 public class SalesReportDataInterpreter implements DataInterpreter {
-    private FileDAO fileDAO;
     private FileDecoder salesReportFileDecoder;
     private static final String OUTPUT_TEMPLATE
             = "Customer amount: %s \n" +
@@ -20,14 +19,14 @@ public class SalesReportDataInterpreter implements DataInterpreter {
             "ID of the most expensive sale: %s \n" +
             "Worst salesman ever: %s \n";
 
-    public SalesReportDataInterpreter(FileDAO fileDAO,FileDecoder fileDecoder) {
+    public SalesReportDataInterpreter(FileDecoder fileDecoder) {
         this.salesReportFileDecoder = fileDecoder;
-        this.fileDAO = fileDAO;
     }
 
 
     @Override
-    public String analyseData(SalesReport salesReport) {
+    public String analyseData(Path path) {
+        SalesReport salesReport = salesReportFileDecoder.decodeFile(path);
         int clients = salesReport.getCustomers().size();
         int salesman = salesReport.getSalesmen().size();
         String worstSalesmanEver;
