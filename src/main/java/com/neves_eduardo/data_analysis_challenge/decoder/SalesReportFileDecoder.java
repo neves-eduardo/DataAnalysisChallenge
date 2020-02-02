@@ -3,11 +3,10 @@ package com.neves_eduardo.data_analysis_challenge.decoder;
 import com.neves_eduardo.data_analysis_challenge.dao.FileDAO;
 import com.neves_eduardo.data_analysis_challenge.dto.*;
 
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -72,8 +71,6 @@ public class SalesReportFileDecoder implements FileDecoder {
                         .map(this::decodeSale)
                         .collect(Collectors.toList()));
 
-
-        System.out.println("jooj");
 
         return salesReport;
 
