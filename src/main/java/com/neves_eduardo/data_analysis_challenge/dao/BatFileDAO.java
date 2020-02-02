@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.IllegalFormatException;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -21,13 +22,13 @@ public class BatFileDAO implements FileDAO {
 
 
     @Override
-    public List<Path> readFiles(){
+    public List<String> readFile(Path file){
         if(!Files.exists(inputDirectory)) {throw new IllegalArgumentException("Input Directory does not exist");}
-        try (Stream<Path> paths = Files.walk(inputDirectory)) {
-            return paths
-                    .filter(Files::isRegularFile)
-                    .filter(s -> s.getFileName().toString().endsWith(INPUT_FILE_FORMAT))
-                    .collect(Collectors.toList());
+        if(!Files.isRegularFile(file)) {throw new IllegalArgumentException("File is not regular");}
+        if(!file.getFileName().toString().endsWith(INPUT_FILE_FORMAT)){throw new IllegalArgumentException("Error: " + file.getFileName() + " is not a .bat file");}
+
+        try {
+            return Files.readAllLines(file);
         } catch (IOException e) {
             throw new RuntimeException("ERROR: Error accessing input directory");
         }
