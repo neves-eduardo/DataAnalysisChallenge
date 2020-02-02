@@ -1,6 +1,5 @@
 package com.neves_eduardo.data_analysis_challenge.service;
 
-import com.neves_eduardo.data_analysis_challenge.dao.FileDAO;
 import com.neves_eduardo.data_analysis_challenge.decoder.FileDecoder;
 import com.neves_eduardo.data_analysis_challenge.dto.*;
 import org.junit.Before;
@@ -13,9 +12,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collections;
 
-import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -50,7 +47,7 @@ public class SalesReportDataInterpreterTest {
 
     @Test
     public void test() {
-        System.out.println(salesReportDataInterpreter.analyseData(Paths.get("")));
+        System.out.println(salesReportDataInterpreter.analyzeData(Paths.get("")));
     }
 
 }
