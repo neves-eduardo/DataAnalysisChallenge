@@ -24,7 +24,6 @@ public class BatFileDAO implements FileDAO {
     @Override
     public List<String> readFile(Path file){
         if(!Files.exists(inputDirectory)) {throw new IllegalArgumentException("Input Directory does not exist");}
-        if(!Files.isRegularFile(file)) {throw new IllegalArgumentException("File is not regular");}
         if(!file.getFileName().toString().endsWith(INPUT_FILE_FORMAT)){throw new IllegalArgumentException("Error: " + file.getFileName() + " is not a .bat file");}
 
         try {

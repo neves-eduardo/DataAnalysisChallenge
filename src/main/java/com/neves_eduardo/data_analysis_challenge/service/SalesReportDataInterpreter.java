@@ -25,7 +25,7 @@ public class SalesReportDataInterpreter implements DataInterpreter {
 
 
     @Override
-    public String analyseData(Path path) {
+    public String analyzeData(Path path) {
         SalesReport salesReport = salesReportFileDecoder.decodeFile(path);
         int clients = salesReport.getCustomers().size();
         int salesman = salesReport.getSalesmen().size();
