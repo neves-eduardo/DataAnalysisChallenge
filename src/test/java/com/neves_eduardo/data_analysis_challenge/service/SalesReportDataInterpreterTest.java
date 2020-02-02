@@ -14,6 +14,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -28,7 +30,7 @@ public class SalesReportDataInterpreterTest {
     @Before
     public void init() {
         ArrayList<Item> items1 = new ArrayList<>();
-        items1.add(new Item(1,100000000,100));
+        items1.add(new Item(1,1,100));
         ArrayList<Item> items2 = new ArrayList<>();
         items2.add(new Item(1,1,1000));
         items2.add(new Item(1,10000,1000000000));
@@ -52,7 +54,30 @@ public class SalesReportDataInterpreterTest {
 
     @Test
     public void worstSalesmanEverShouldReturnTheSalesmanWithLowestTotalSalesTest() {
-        System.out.println(salesReportDataInterpreter.analyzeData(Paths.get("a")));
+        String outputReport = salesReportDataInterpreter.analyzeData(Paths.get("a"));
+        assertTrue(outputReport.contains("Worst salesman ever: Joao"));
+
+    }
+
+    @Test
+    public void CustomerAmountShouldCountTheCustomerAmountTest() {
+        String outputReport = salesReportDataInterpreter.analyzeData(Paths.get("a"));
+        assertTrue(outputReport.contains("Customer amount: 3 "));
+
+    }
+
+    @Test
+    public void SalesmanAmountShouldCountTheSalesmanAmountTest() {
+        String outputReport = salesReportDataInterpreter.analyzeData(Paths.get("a"));
+        assertTrue(outputReport.contains("ID of the most expensive sale: 2"));
+
+    }
+
+    @Test
+    public void IDofTheMostExpensiveSaleShouldBeOfTheMostExpensiveSaleTest() {
+        String outputReport = salesReportDataInterpreter.analyzeData(Paths.get("a"));
+        assertTrue(outputReport.contains("Salesman amount: 2 "));
+
     }
 
 }
