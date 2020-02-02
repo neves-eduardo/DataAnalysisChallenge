@@ -1,28 +1,39 @@
 package com.neves_eduardo.data_analysis_challenge.decoder;
 
 import com.neves_eduardo.data_analysis_challenge.dao.BatFileDAO;
+import com.neves_eduardo.data_analysis_challenge.dao.FileDAO;
 import com.neves_eduardo.data_analysis_challenge.dto.*;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.hamcrest.*;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.hamcrest.Matchers.samePropertyValuesAs;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
 
+@RunWith(MockitoJUnitRunner.class)
 public class SalesReportFileDecoderTest {
-    private SalesReportFileDecoder salesReportFileDecoder = new SalesReportFileDecoder();
+    @Mock
+    FileDAO fileDAO;
+    @InjectMocks
+    private SalesReportFileDecoder salesReportFileDecoder = new SalesReportFileDecoder(fileDAO);
     private List<String> file;
     private static final double DELTA = 0.001;
     private SalesReport salesReport;
 
     @Before
     public void init() {
+        salesReport = salesReportFileDecoder.decodeFile(Paths.get("/"));
         file = new ArrayList<>();
         file.add("001ç1234567891234çDiegoç50000");
         file.add("001ç3245678865434çRenatoç40000.99");
@@ -30,7 +41,8 @@ public class SalesReportFileDecoderTest {
         file.add("002ç2345675433444345çEduardoPereiraçRural");
         file.add("003ç10ç[1-10-100,2-30-2.50,3-40-3.10]çDiego");
         file.add("003ç08ç[1-34-10,2-33-1.50,3-40-0.10]çRenato");
-        salesReport = salesReportFileDecoder.decodeFile(file);
+        Mockito.when(fileDAO.readFile(Paths.get("/"))).thenReturn(file);
+        salesReport = salesReportFileDecoder.decodeFile(Paths.get("/"));
     }
 
     @Test
