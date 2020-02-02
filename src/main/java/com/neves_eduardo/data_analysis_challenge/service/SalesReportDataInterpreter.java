@@ -1,8 +1,6 @@
 package com.neves_eduardo.data_analysis_challenge.service;
 
-import com.neves_eduardo.data_analysis_challenge.dao.FileDAO;
 import com.neves_eduardo.data_analysis_challenge.decoder.FileDecoder;
-import com.neves_eduardo.data_analysis_challenge.decoder.SalesReportFileDecoder;
 import com.neves_eduardo.data_analysis_challenge.dto.Item;
 import com.neves_eduardo.data_analysis_challenge.dto.Sale;
 import com.neves_eduardo.data_analysis_challenge.dto.SalesReport;
@@ -10,6 +8,7 @@ import com.neves_eduardo.data_analysis_challenge.dto.Salesman;
 
 import java.nio.file.Path;
 import java.util.Comparator;
+import java.util.Map;
 
 public class SalesReportDataInterpreter implements DataInterpreter {
     private FileDecoder salesReportFileDecoder;
@@ -28,11 +27,21 @@ public class SalesReportDataInterpreter implements DataInterpreter {
     public String analyzeData(Path path) {
         SalesReport salesReport = salesReportFileDecoder.decodeFile(path);
         int clients = salesReport.getCustomers().size();
-        int salesman = salesReport.getSalesmen().size();
+        int salesmen = salesReport.getSalesmen().size();
         String worstSalesmanEver;
+        Map<String,Double> salesmenRank;
+        for (Salesman salesman : salesReport.getSalesmen()) {
+            Double totalSales= salesReport
+                    .getSales()
+                    .stream()
+                    .filter(s ->s.getSalesmanName().equals(salesman.getName()))
+                    .map(s -> s.getItems().stream().mapToDouble(i -> i.getPrice() * i.getQuantity()).sum())
+                    .findFirst()
+                    .get();
+        }
         Comparator<Sale> getMostExpensiveSale = Comparator.comparingDouble((s -> s.getItems().stream().mapToDouble(i -> i.getPrice() * i.getQuantity()).sum()));
         int mostExpensiveSaleID = salesReport.getSales().stream().max(getMostExpensiveSale).get().getSaleId();
 
-        return String.format(OUTPUT_TEMPLATE,clients,salesman,mostExpensiveSaleID,"a");
+        return String.format(OUTPUT_TEMPLATE,clients,salesmen,mostExpensiveSaleID,"a");
     }
 }

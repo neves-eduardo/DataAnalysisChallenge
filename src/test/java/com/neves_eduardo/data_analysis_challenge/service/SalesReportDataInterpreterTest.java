@@ -39,7 +39,8 @@ public class SalesReportDataInterpreterTest {
         customers.add(new Customer("a","a","a"));
         customers.add(new Customer("a","a","a"));
         ArrayList<Salesman> salesmen = new ArrayList<>();
-        salesmen.add(new Salesman("a","a",10));
+        salesmen.add(new Salesman("a","Joao",10));
+        salesmen.add(new Salesman("a","Roger",10));
         salesReport = new SalesReport(customers,sales,salesmen);
         Mockito.when(fileDecoder.decodeFile(any())).thenReturn(salesReport);
 
