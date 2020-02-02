@@ -3,10 +3,7 @@ package com.neves_eduardo.data_analysis_challenge.decoder;
 import com.neves_eduardo.data_analysis_challenge.dao.FileDAO;
 import com.neves_eduardo.data_analysis_challenge.dto.*;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
