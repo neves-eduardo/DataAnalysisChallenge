@@ -9,21 +9,20 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.hamcrest.*;
 
 import static org.hamcrest.Matchers.samePropertyValuesAs;
 import static org.junit.Assert.*;
 
 public class SalesReportFileDecoderTest {
-    @Mock
-    private BatFileDAO batFileDAO;
-    @InjectMocks
-    private SalesReportFileDecoder salesReportFileDecoder = new SalesReportFileDecoder(batFileDAO);
+    private SalesReportFileDecoder salesReportFileDecoder = new SalesReportFileDecoder();
     private List<String> file;
     private static final double DELTA = 0.001;
     private SalesReport salesReport;
+
     @Before
-    public void init(){
+    public void init() {
         file = new ArrayList<>();
         file.add("001ç1234567891234çDiegoç50000");
         file.add("001ç3245678865434çRenatoç40000.99");
@@ -43,7 +42,7 @@ public class SalesReportFileDecoderTest {
         assertEquals("1234567891234", salesReport.getSalesmen().get(0).getCpf());
         assertEquals("3245678865434", salesReport.getSalesmen().get(1).getCpf());
         assertEquals(50000, salesReport.getSalesmen().get(0).getSalary(), DELTA);
-        assertEquals(40000.99, salesReport.getSalesmen().get(1).getSalary(),DELTA);
+        assertEquals(40000.99, salesReport.getSalesmen().get(1).getSalary(), DELTA);
 
     }
 
@@ -55,7 +54,6 @@ public class SalesReportFileDecoderTest {
         assertEquals("EduardoPereira", salesReport.getCustomers().get(1).getName());
         assertEquals("2345675434544345", salesReport.getCustomers().get(0).getCnpj());
         assertEquals("2345675433444345", salesReport.getCustomers().get(1).getCnpj());
-
 
 
     }
@@ -70,9 +68,9 @@ public class SalesReportFileDecoderTest {
         assertEquals("2345675433444345", salesReport.getCustomers().get(1).getCnpj());
         assertEquals("Diego", salesReport.getSales().get(0).getSalesmanName());
         assertEquals("Renato", salesReport.getSales().get(1).getSalesmanName());
-        assertThat(salesReport.getSales().get(0).getItems().get(0), samePropertyValuesAs(new Item(1,10,100)));
-        assertThat(salesReport.getSales().get(0).getItems().get(1), samePropertyValuesAs(new Item(2,30,2.50)));
-        assertThat(salesReport.getSales().get(0).getItems().get(2), samePropertyValuesAs(new Item(3,40,3.10)));
+        assertThat(salesReport.getSales().get(0).getItems().get(0), samePropertyValuesAs(new Item(1, 10, 100)));
+        assertThat(salesReport.getSales().get(0).getItems().get(1), samePropertyValuesAs(new Item(2, 30, 2.50)));
+        assertThat(salesReport.getSales().get(0).getItems().get(2), samePropertyValuesAs(new Item(3, 40, 3.10)));
         assertThat(salesReport.getSales().get(1).getItems().get(0), samePropertyValuesAs(new Item(1, 34, 10)));
         assertThat(salesReport.getSales().get(1).getItems().get(1), samePropertyValuesAs(new Item(2, 33, 1.50)));
         assertThat(salesReport.getSales().get(1).getItems().get(2), samePropertyValuesAs(new Item(3, 40, 0.10)));
