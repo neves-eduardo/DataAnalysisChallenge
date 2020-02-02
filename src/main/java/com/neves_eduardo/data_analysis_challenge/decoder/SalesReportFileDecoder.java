@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +28,20 @@ public class SalesReportFileDecoder implements FileDecoder {
     private Customer decodeCustomer(String line) {
         String[] attributes = line.split("ç");
         return new Customer(attributes[1], attributes[2], attributes[3]);
+    }
+
+    private Sale decodeSale(String line) {
+        String[] attributes = line.split("ç");
+        List<String> itemsText = Arrays.asList(attributes[2].substring(attributes[2].indexOf("[") +1 ,attributes[2].indexOf("]") -1).split(","));
+        List<Item> items = itemsText.stream().map(this::decodeItem).collect(Collectors.toList());
+
+        return new Sale(Integer.parseInt(attributes[1]),items,attributes[3]);
+    }
+
+    private Item decodeItem(String itemLine) {
+        String[] attributes = itemLine.split("-");
+        return new Item(Integer.parseInt(attributes[0]),Integer.parseInt(attributes[1]),Double.parseDouble(attributes[2]));
+
     }
 
 
@@ -50,8 +65,15 @@ public class SalesReportFileDecoder implements FileDecoder {
                         .map(this::decodeCustomer)
                         .collect(Collectors.toList()));
 
+        salesReport.setSales(
+                content
+                        .stream()
+                        .filter(s -> s.startsWith(DataTypes.SALE.getCode()))
+                        .map(this::decodeSale)
+                        .collect(Collectors.toList()));
 
-        content.stream().filter(s -> s.startsWith(DataTypes.SALE.getCode())).forEach(System.out::println);
+
+        System.out.println("jooj");
 
         return salesReport;
 
