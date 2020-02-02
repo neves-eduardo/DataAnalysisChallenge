@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class DirectoryObserver {
     private static final Path INPUT_PATH = Paths.get(System.getenv("HOME").concat("/data/in/"));
@@ -30,7 +29,7 @@ public class DirectoryObserver {
                 }
             }
         } catch (IOException | IllegalArgumentException e) {
-            System.out.println("Fatal Error booting application: " + e.getMessage());
+            System.out.println("Error booting application: " + e.getMessage());
         }
 
     }

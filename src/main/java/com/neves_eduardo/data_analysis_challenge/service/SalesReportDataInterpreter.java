@@ -1,7 +1,6 @@
 package com.neves_eduardo.data_analysis_challenge.service;
 
 import com.neves_eduardo.data_analysis_challenge.decoder.FileDecoder;
-import com.neves_eduardo.data_analysis_challenge.dto.Item;
 import com.neves_eduardo.data_analysis_challenge.dto.Sale;
 import com.neves_eduardo.data_analysis_challenge.dto.SalesReport;
 import com.neves_eduardo.data_analysis_challenge.dto.Salesman;
