@@ -1,5 +1,6 @@
 package com.neves_eduardo.data_analysis_challenge.service;
 
+import com.neves_eduardo.data_analysis_challenge.dao.FileDAO;
 import com.neves_eduardo.data_analysis_challenge.decoder.FileDecoder;
 import com.neves_eduardo.data_analysis_challenge.dto.*;
 import org.junit.Before;
@@ -19,8 +20,10 @@ import static org.mockito.Matchers.any;
 public class SalesReportDataInterpreterTest {
     @Mock
     private FileDecoder fileDecoder;
+    @Mock
+    private FileDAO fileDAO;
     @InjectMocks
-    private SalesReportDataInterpreter salesReportDataInterpreter = new SalesReportDataInterpreter(fileDecoder);
+    private SalesReportDataInterpreter salesReportDataInterpreter = new SalesReportDataInterpreter(fileDecoder,fileDAO);
     private SalesReport salesReport;
     @Before
     public void init() {
@@ -48,8 +51,8 @@ public class SalesReportDataInterpreterTest {
     }
 
     @Test
-    public void test() {
-        System.out.println(salesReportDataInterpreter.analyzeData(Paths.get("")));
+    public void worstSalesmanEverShouldReturnTheSalesmanWithLowestTotalSalesTest() {
+        System.out.println(salesReportDataInterpreter.analyzeData(Paths.get("a")));
     }
 
 }

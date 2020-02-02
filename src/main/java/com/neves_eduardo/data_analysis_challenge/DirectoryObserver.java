@@ -15,17 +15,17 @@ import java.util.stream.Collectors;
 public class DirectoryObserver {
     private static final Path INPUT_PATH = Paths.get(System.getenv("HOME").concat("/data/in/"));
     private static final Path OUTPUT_PATH = Paths.get(System.getenv("HOME").concat("/data/out/"));
-    List<Path> files;
-    FileDAO fileDAO = new BatFileDAO(INPUT_PATH, OUTPUT_PATH);
-    FileDecoder fileDecoder = new SalesReportFileDecoder(fileDAO);
-    DataInterpreter dataInterpreter = new SalesReportDataInterpreter(fileDecoder);
+    private List<Path> files;
+    private FileDAO fileDAO = new BatFileDAO(INPUT_PATH, OUTPUT_PATH);
+    private FileDecoder fileDecoder = new SalesReportFileDecoder(fileDAO);
+    private DataInterpreter dataInterpreter = new SalesReportDataInterpreter(fileDecoder,fileDAO);
 
     public void appBoot() {
         try {
             files = Files.walk(INPUT_PATH).filter(Files::isRegularFile).collect(Collectors.toList());
             for (Path file : files) {
                 if (Files.isRegularFile(file)) {
-                    fileDAO.writeFile(file.getFileName().toString(), dataInterpreter.analyzeData(file));
+                    dataInterpreter.analyzeData(file);
                 }
             }
         } catch (IOException | IllegalArgumentException e) {
@@ -43,7 +43,7 @@ public class DirectoryObserver {
                 for (WatchEvent<?> event : watchKey.pollEvents()) {
                     Path newFilePath = Paths.get(INPUT_PATH.toString().concat("/" + event.context().toString()));
                     System.out.println("New File Detected: " + newFilePath);
-                    fileDAO.writeFile(event.context().toString(), dataInterpreter.analyzeData(newFilePath));
+                     dataInterpreter.analyzeData(newFilePath);
 
                 }
                 watchKey.reset();
