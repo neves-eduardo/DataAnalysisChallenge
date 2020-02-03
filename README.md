@@ -17,6 +17,6 @@
 4) A file named example.done.bat should appear in the "out" folder now if the app is running, check it out!
 
 ### Future Improvements
--Support for new formats
--Better error handling
--Read Files on update, not only on creation
+- Support for new formats
+- Better error handling
+- Read Files on update, not only on creation
