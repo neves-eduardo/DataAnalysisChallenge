@@ -17,6 +17,7 @@ import org.hamcrest.*;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static org.hamcrest.Matchers.in;
 import static org.hamcrest.Matchers.samePropertyValuesAs;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -87,6 +88,39 @@ public class SalesReportFileDecoderTest {
         assertThat(salesReport.getSales().get(1).getItems().get(1), samePropertyValuesAs(new Item(2, 33, 1.50)));
         assertThat(salesReport.getSales().get(1).getItems().get(2), samePropertyValuesAs(new Item(3, 40, 0.10)));
 
+
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void decoderShouldNotAcceptIllegalCodes(){
+        ArrayList<String> invalidFiles = new ArrayList<>();
+        invalidFiles.add("004ç1234567891234çDiegoç50000");
+        invalidFiles.add("001ç3245678865434çRenatoç40000.99");
+        invalidFiles.add("002ç2345675434544345çJose da SilvaçRural");
+        invalidFiles.add("002ç2345675433444345çEduardoPereiraçRural");
+        invalidFiles.add("003ç10ç[1-10-100,2-30-2.50,3-40-3.10]çDiego");
+        invalidFiles.add("003ç08ç[1-34-10,2-33-1.50,3-40-0.10]çRenato");
+
+        Mockito.when(fileDAO.readFile(Paths.get("v"))).thenReturn(invalidFiles);
+        salesReportFileDecoder.decodeFile(Paths.get("v"));
+    }
+
+
+    @Test
+    public void decoderShouldAcceptNamesWithÇ(){
+        ArrayList<String> invalidFiles = new ArrayList<>();
+        invalidFiles.add("001ç1234567891234çDiegoç50000");
+        invalidFiles.add("001ç3245678865434çRenatoç40000.99");
+        invalidFiles.add("001ç3245678865434çLourençoç40000.99");
+        invalidFiles.add("001ç3245678865434çLouçoçoç40000.99");
+        invalidFiles.add("002ç2345675434544345çJose da SilvaçRural");
+        invalidFiles.add("002ç2345675433444345çEduardoPereiraçRural");
+        invalidFiles.add("003ç10ç[1-10-100,2-30-2.50,3-40-3.10]çDiego");
+        invalidFiles.add("003ç08ç[1-34-10,2-33-1.50,3-40-0.10]çRenato");
+
+        Mockito.when(fileDAO.readFile(Paths.get("v"))).thenReturn(invalidFiles);
+        assertEquals(salesReportFileDecoder.decodeFile(Paths.get("v")).getSalesmen().get(2).getName(),"Lourenço");
+        assertEquals(salesReportFileDecoder.decodeFile(Paths.get("v")).getSalesmen().get(3).getName(),"Louçoço");
 
     }
 }

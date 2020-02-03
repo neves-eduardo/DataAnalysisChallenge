@@ -41,7 +41,7 @@ public class SalesReportDataInterpreter implements DataInterpreter {
                 getMostExpensiveSale(salesReport.getSales()).getSaleId(),
                 getWorstSalesmanEver(salesReport.getSales(),salesReport.getSalesmen()));
 
-        fileDAO.writeFile(path.getFileName().toString(), outputString);
+        fileDAO.writeFile(path.getFileName().toString().replace(".bat",""), outputString);
         return outputString;
     }
 
