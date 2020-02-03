@@ -2,7 +2,6 @@ package com.neves_eduardo.data_analysis_challenge.decoder;
 
 import com.neves_eduardo.data_analysis_challenge.dao.FileDAO;
 import com.neves_eduardo.data_analysis_challenge.dto.*;
-import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.nio.file.Path;
@@ -12,7 +11,12 @@ import java.util.stream.Collectors;
 
 public class SalesReportFileDecoder implements FileDecoder {
     private FileDAO fileDAO;
-
+    private static final int MIN_NUMBER_OF_CEDILLAS= 3;
+    private static final int MAXIMUM_SPLIT_SIZE = 4;
+    private static final int SPLIT_ATTRIBUTE_ZERO = 0;
+    private static final int SPLIT_FIRST_ATTRIBUTE = 1;
+    private static final int SPLIT_SECOND_ATTRIBUTE = 2;
+    private static final int SPLIT_THIRD_ATTRIBUTE = 3;
     public SalesReportFileDecoder(FileDAO fileDAO) {
         this.fileDAO = fileDAO;
     }
@@ -21,7 +25,7 @@ public class SalesReportFileDecoder implements FileDecoder {
     public void validateLine(String line) {
 
         List<DataTypes> validTypes = Arrays.asList(DataTypes.values());
-        if (line.split("ç").length < 3) {
+        if (line.split("ç").length < MIN_NUMBER_OF_CEDILLAS) {
             throw new IllegalArgumentException("ERROR: File contains lines that cannot be interpreted");
         }
         if (validTypes.stream().noneMatch(s -> s.getCode().equals(line.substring(0, 3)))) {
@@ -30,42 +34,46 @@ public class SalesReportFileDecoder implements FileDecoder {
     }
 
     private Salesman decodeSalesman(String line) {
-        if (line.chars().filter(ch -> ch == 'ç').count() >= 4) {
-            String[] attributes = StringUtils.split(line, "ç", 3);
-            String last = StringUtils.substringAfterLast(attributes[2], "ç");
-            String antepenultimate = StringUtils.substringBeforeLast(attributes[2], "ç");
-            return new Salesman(attributes[1], antepenultimate, Double.valueOf(last));
+        if (line.chars().filter(ch -> ch == 'ç').count() >= MAXIMUM_SPLIT_SIZE) {
+            String[] attributes = StringUtils.split(line, "ç", MAXIMUM_SPLIT_SIZE-1);
+            String last = StringUtils.substringAfterLast(attributes[SPLIT_SECOND_ATTRIBUTE], "ç");
+            String antepenultimate = StringUtils.substringBeforeLast(attributes[SPLIT_SECOND_ATTRIBUTE], "ç");
+            return new Salesman(attributes[SPLIT_FIRST_ATTRIBUTE], antepenultimate, Double.valueOf(last));
         } else {
             String[] attributes = line.split("ç");
-            return new Salesman(attributes[1], attributes[2], Double.parseDouble(attributes[3]));
+            return new Salesman(attributes[SPLIT_FIRST_ATTRIBUTE], attributes[SPLIT_SECOND_ATTRIBUTE], Double.parseDouble(attributes[SPLIT_THIRD_ATTRIBUTE]));
         }
 
     }
 
     private Customer decodeCustomer(String line) {
-        if (line.chars().filter(ch -> ch == 'ç').count() >= 4) {
-            String[] attributes = StringUtils.split(line, "ç", 3);
-            String last = StringUtils.substringAfterLast(attributes[2], "ç");
-            String antepenultimate = StringUtils.substringBeforeLast(attributes[2], "ç");
-            return new Customer(attributes[1], antepenultimate, last);
+        if (line.chars().filter(ch -> ch == 'ç').count() >= MAXIMUM_SPLIT_SIZE) {
+            String[] attributes = StringUtils.split(line, "ç", MAXIMUM_SPLIT_SIZE-1);
+            String last = StringUtils.substringAfterLast(attributes[SPLIT_SECOND_ATTRIBUTE], "ç");
+            String antepenultimate = StringUtils.substringBeforeLast(attributes[SPLIT_SECOND_ATTRIBUTE], "ç");
+            return new Customer(attributes[SPLIT_FIRST_ATTRIBUTE], antepenultimate, last);
         } else {
             String[] attributes = line.split("ç");
-            return new Customer(attributes[1], attributes[2], attributes[3]);
+            return new Customer(attributes[SPLIT_FIRST_ATTRIBUTE], attributes[SPLIT_SECOND_ATTRIBUTE], attributes[SPLIT_THIRD_ATTRIBUTE]);
         }
 
     }
 
     private Sale decodeSale(String line) {
-        String[] attributes = StringUtils.split(line, "ç", 4);
-        List<String> itemsText = Arrays.asList(attributes[2].substring(attributes[2].indexOf("[") + 1, attributes[2].indexOf("]") - 1).split(","));
+        String[] attributes = StringUtils.split(line, "ç", MAXIMUM_SPLIT_SIZE);
+        List<String> itemsText = Arrays.asList(
+                attributes[SPLIT_SECOND_ATTRIBUTE]
+                        .substring(attributes[SPLIT_SECOND_ATTRIBUTE]
+                                .indexOf("[") + 1, attributes[SPLIT_SECOND_ATTRIBUTE].indexOf("]") - 1)
+                        .split(","));
         List<Item> items = itemsText.stream().map(this::decodeItem).collect(Collectors.toList());
 
-        return new Sale(Integer.parseInt(attributes[1]), items, attributes[3]);
+        return new Sale(Integer.parseInt(attributes[SPLIT_FIRST_ATTRIBUTE]), items, attributes[SPLIT_THIRD_ATTRIBUTE]);
     }
 
     private Item decodeItem(String itemLine) {
         String[] attributes = itemLine.split("-");
-        return new Item(Integer.parseInt(attributes[0]), Integer.parseInt(attributes[1]), Double.parseDouble(attributes[2]));
+        return new Item(Integer.parseInt(attributes[SPLIT_ATTRIBUTE_ZERO]), Integer.parseInt(attributes[SPLIT_FIRST_ATTRIBUTE]), Double.parseDouble(attributes[SPLIT_SECOND_ATTRIBUTE]));
 
     }
 
