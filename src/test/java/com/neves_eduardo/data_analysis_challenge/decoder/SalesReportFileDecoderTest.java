@@ -115,12 +115,16 @@ public class SalesReportFileDecoderTest {
         invalidFiles.add("001ç3245678865434çLouçoçoç40000.99");
         invalidFiles.add("002ç2345675434544345çJose da SilvaçRural");
         invalidFiles.add("002ç2345675433444345çEduardoPereiraçRural");
+        invalidFiles.add("002ç2345675433444345çLourençoçRural");
         invalidFiles.add("003ç10ç[1-10-100,2-30-2.50,3-40-3.10]çDiego");
         invalidFiles.add("003ç08ç[1-34-10,2-33-1.50,3-40-0.10]çRenato");
+        invalidFiles.add("003ç08ç[1-34-10,2-33-1.50,3-40-0.10]çLourenço");
 
         Mockito.when(fileDAO.readFile(Paths.get("v"))).thenReturn(invalidFiles);
         assertEquals(salesReportFileDecoder.decodeFile(Paths.get("v")).getSalesmen().get(2).getName(),"Lourenço");
         assertEquals(salesReportFileDecoder.decodeFile(Paths.get("v")).getSalesmen().get(3).getName(),"Louçoço");
+        assertEquals(salesReportFileDecoder.decodeFile(Paths.get("v")).getSales().get(2).getSalesmanName(),"Lourenço");
+        assertEquals(salesReportFileDecoder.decodeFile(Paths.get("v")).getCustomers().get(2).getName(),"Lourenço");
 
     }
 }
