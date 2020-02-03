@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id "idea"
+    id 'application'
 }
 
 group 'org.example'
@@ -9,6 +11,10 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+}
+
+application {
+    mainClassName = 'com.neves_eduardo.data_analysis_challenge.Main'
 }
 
 dependencies {
