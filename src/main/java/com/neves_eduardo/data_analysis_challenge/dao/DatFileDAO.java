@@ -35,7 +35,7 @@ public class DatFileDAO implements FileDAO {
     public Path writeFile(String fileName, String text) {
         if(!Files.exists(outputDirectory)) {throw new IllegalArgumentException("Output Directory does not exist");}
         try {
-            return Files.write(outputDirectory.resolve(Paths.get(fileName.concat(OUTPUT_FILE_FORMAT))), text.getBytes());
+            return Files.write(outputDirectory.resolve(Paths.get(fileName.replace(INPUT_FILE_FORMAT,"").concat(OUTPUT_FILE_FORMAT))), text.getBytes());
         } catch (IOException e) {
             throw new RuntimeException("ERROR: Error accessing input directory");
         }
