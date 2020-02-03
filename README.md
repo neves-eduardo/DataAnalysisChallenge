@@ -1,4 +1,6 @@
 # DataAnalysisChallenge
+## Overview
+![alt text](https://i.imgur.com/jB5UAy1.jpg?1)
 ### How to run this project:
 1) Use the commands:
 > .gradlew clean build
