@@ -1,6 +1,5 @@
 package com.neves_eduardo.data_analysis_challenge.decoder;
 
-import com.neves_eduardo.data_analysis_challenge.dao.BatFileDAO;
 import com.neves_eduardo.data_analysis_challenge.dao.FileDAO;
 import com.neves_eduardo.data_analysis_challenge.dto.*;
 import org.junit.Before;
@@ -13,7 +12,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hamcrest.*;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 

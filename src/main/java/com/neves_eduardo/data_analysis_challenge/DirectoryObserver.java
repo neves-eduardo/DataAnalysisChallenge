@@ -1,6 +1,6 @@
 package com.neves_eduardo.data_analysis_challenge;
 
-import com.neves_eduardo.data_analysis_challenge.dao.BatFileDAO;
+import com.neves_eduardo.data_analysis_challenge.dao.DatFileDAO;
 import com.neves_eduardo.data_analysis_challenge.dao.FileDAO;
 import com.neves_eduardo.data_analysis_challenge.decoder.FileDecoder;
 import com.neves_eduardo.data_analysis_challenge.decoder.SalesReportFileDecoder;
@@ -16,7 +16,7 @@ public class DirectoryObserver {
     private static final Path INPUT_PATH = Paths.get(System.getenv("HOME").concat("/data/in/"));
     private static final Path OUTPUT_PATH = Paths.get(System.getenv("HOME").concat("/data/out/"));
     private List<Path> files;
-    private FileDAO fileDAO = new BatFileDAO(INPUT_PATH, OUTPUT_PATH);
+    private FileDAO fileDAO = new DatFileDAO(INPUT_PATH, OUTPUT_PATH);
     private FileDecoder fileDecoder = new SalesReportFileDecoder(fileDAO);
     private DataInterpreter dataInterpreter = new SalesReportDataInterpreter(fileDecoder,fileDAO);
 
