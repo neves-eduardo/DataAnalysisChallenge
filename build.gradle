@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id "idea"
+    id 'application'
 }
 
 group 'org.example'
@@ -11,10 +13,14 @@ repositories {
     mavenCentral()
 }
 
+application {
+    mainClassName = 'com.neves_eduardo.data_analysis_challenge.Main'
+}
+
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-// https://mvnrepository.com/artifact/org.hamcrest/hamcrest
     testCompile group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
 
 
     testCompile group: 'org.mockito', name: 'mockito-all', version: '1.10.19'

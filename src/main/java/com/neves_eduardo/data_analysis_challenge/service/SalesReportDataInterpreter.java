@@ -34,16 +34,18 @@ public class SalesReportDataInterpreter implements DataInterpreter {
         SalesReport salesReport = salesReportFileDecoder.decodeFile(path);
         int clients = salesReport.getCustomers().size();
         int salesmen = salesReport.getSalesmen().size();
-        Comparator<Sale> mostExpensiveSale = Comparator.comparingDouble((s -> s.getItems().stream().mapToDouble(i -> i.getPrice() * i.getQuantity()).sum()));
-        int mostExpensiveSaleID = salesReport.getSales().stream().max(mostExpensiveSale).get().getSaleId();
 
-        String outputString = String.format(OUTPUT_TEMPLATE,clients,salesmen,mostExpensiveSaleID,getWorstSalesmanEver(salesReport.getSales(),salesReport.getSalesmen()));
+        String outputString = String.format(OUTPUT_TEMPLATE,
+                clients,
+                salesmen,
+                getMostExpensiveSale(salesReport.getSales()).getSaleId(),
+                getWorstSalesmanEver(salesReport.getSales(),salesReport.getSalesmen()));
 
-        fileDAO.writeFile(path.getFileName().toString(), outputString);
+        fileDAO.writeFile(path.getFileName().toString().replace(".bat",""), outputString);
         return outputString;
     }
 
-    public String getWorstSalesmanEver(List<Sale>sales,List<Salesman> salesmen){
+    private String getWorstSalesmanEver(List<Sale>sales,List<Salesman> salesmen){
         Map<String,Double> salesmenRank = new HashMap<>();
         for (Salesman salesman : salesmen) {
             Double salesAmount= sales
@@ -61,6 +63,15 @@ public class SalesReportDataInterpreter implements DataInterpreter {
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList())
                 .get(0);
+    }
+
+    private Sale getMostExpensiveSale(List<Sale> sales){
+        Comparator<Sale> mostExpensiveSale = Comparator
+                .comparingDouble((s -> s.getItems().stream().mapToDouble(i -> i.getPrice() * i.getQuantity()).sum()));
+        return sales
+                .stream()
+                .max(mostExpensiveSale)
+                .get();
     }
 
 }
