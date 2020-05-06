@@ -3,6 +3,7 @@ package com.neves_eduardo.data_analysis_challenge.decoder;
 import com.neves_eduardo.data_analysis_challenge.dao.FileDAO;
 import com.neves_eduardo.data_analysis_challenge.dto.*;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 @Service
 public class SalesReportFileDecoder implements FileDecoder {
     private FileDAO fileDAO;
-
+    private Logger logger = Logger.getLogger(SalesReportFileDecoder.class);
     private static final char SEPARATOR = 'ç';
     private static final String ITEM_LIST_SEPARATOR = ",";
     private static final int MIN_NUMBER_OF_CEDILLAS= 3;
@@ -31,7 +32,7 @@ public class SalesReportFileDecoder implements FileDecoder {
 
 
     public void validateLine(String line) {
-
+        logger.debug("validating line: " + line);
         List<DataTypes> validTypes = Arrays.asList(DataTypes.values());
         if (line.split(String.valueOf(SEPARATOR)).length < MIN_NUMBER_OF_CEDILLAS) {
             throw new IllegalArgumentException("ERROR: File contains lines that cannot be interpreted");
@@ -39,9 +40,11 @@ public class SalesReportFileDecoder implements FileDecoder {
         if (validTypes.stream().noneMatch(s -> s.getCode().equals(line.substring(0, 3)))) {
             throw new IllegalArgumentException("ERROR: File contains invalid code");
         }
+        logger.debug("line valid");
     }
 
     private Salesman decodeSalesman(String line) {
+        logger.debug("decoding salesman from line: " + line);
         if (line.chars().filter(ch -> ch == SEPARATOR).count() >= MAXIMUM_SPLIT_SIZE) {
             String[] attributes = StringUtils.split(line, String.valueOf(SEPARATOR), MAXIMUM_SPLIT_SIZE-1);
             String last = StringUtils.substringAfterLast(attributes[SPLIT_SECOND_ATTRIBUTE], String.valueOf(SEPARATOR));
@@ -55,6 +58,7 @@ public class SalesReportFileDecoder implements FileDecoder {
     }
 
     private Customer decodeCustomer(String line) {
+        logger.debug("decoding customer from line: " + line);
         if (line.chars().filter(ch -> ch == 'ç').count() >= MAXIMUM_SPLIT_SIZE) {
             String[] attributes = StringUtils.split(line, String.valueOf(SEPARATOR), MAXIMUM_SPLIT_SIZE-1);
             String last = StringUtils.substringAfterLast(attributes[SPLIT_SECOND_ATTRIBUTE], String.valueOf(SEPARATOR));
@@ -68,6 +72,7 @@ public class SalesReportFileDecoder implements FileDecoder {
     }
 
     private Sale decodeSale(String line) {
+        logger.debug("decoding sale from line: " + line);
         String[] attributes = StringUtils.split(line, String.valueOf(SEPARATOR), MAXIMUM_SPLIT_SIZE);
         List<String> itemsText = Arrays.asList(
                 attributes[SPLIT_SECOND_ATTRIBUTE]
@@ -80,6 +85,7 @@ public class SalesReportFileDecoder implements FileDecoder {
     }
 
     private Item decodeItem(String itemLine) {
+        logger.debug("decoding item from line: " + itemLine);
         String[] attributes = itemLine.split("-");
         return new Item(Integer.parseInt(attributes[SPLIT_ATTRIBUTE_ZERO]), Integer.parseInt(attributes[SPLIT_FIRST_ATTRIBUTE]), Double.parseDouble(attributes[SPLIT_SECOND_ATTRIBUTE]));
 
@@ -88,6 +94,7 @@ public class SalesReportFileDecoder implements FileDecoder {
 
     @Override
     public SalesReport decodeFile(Path file) {
+        logger.info("decoding file: " + file);
         List<String> lines = fileDAO.readFile(file);
         SalesReport salesReport = new SalesReport();
 

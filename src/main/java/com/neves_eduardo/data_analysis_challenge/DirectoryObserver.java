@@ -6,6 +6,7 @@ import com.neves_eduardo.data_analysis_challenge.decoder.FileDecoder;
 import com.neves_eduardo.data_analysis_challenge.decoder.SalesReportFileDecoder;
 import com.neves_eduardo.data_analysis_challenge.service.DataInterpreter;
 import com.neves_eduardo.data_analysis_challenge.service.SalesReportDataInterpreter;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ public class DirectoryObserver {
     private FileDAO fileDAO;
     private FileDecoder fileDecoder;
     private DataInterpreter dataInterpreter;
+    private Logger logger = Logger.getLogger(DirectoryObserver.class);
 
     @Autowired
     public DirectoryObserver(FileDAO fileDAO, FileDecoder fileDecoder, DataInterpreter dataInterpreter) {
@@ -31,6 +33,7 @@ public class DirectoryObserver {
     }
 
     public void appBoot() {
+        logger.info("booting directory observer");
         try {
             files = Files.walk(INPUT_PATH).filter(Files::isRegularFile).collect(Collectors.toList());
             for (Path file : files) {
@@ -39,7 +42,7 @@ public class DirectoryObserver {
                 }
             }
         } catch (IOException | IllegalArgumentException e) {
-            System.out.println("Error booting application: " + e.getMessage());
+            logger.error(e.getMessage());
         }
 
     }
@@ -52,7 +55,7 @@ public class DirectoryObserver {
             while ((watchKey = watchService.take()) != null) {
                 for (WatchEvent<?> event : watchKey.pollEvents()) {
                     Path newFilePath = Paths.get(INPUT_PATH.toString().concat("/" + event.context().toString()));
-                    System.out.println("New File Detected: " + newFilePath);
+                    logger.info("New File Detected: " + newFilePath);
                      dataInterpreter.analyzeData(newFilePath);
 
                 }
@@ -60,7 +63,7 @@ public class DirectoryObserver {
             }
 
         } catch (IllegalArgumentException | IOException | InterruptedException exception) {
-            System.out.println("ERROR:" + exception.getMessage());
+            logger.error(exception.getMessage());
 
         }
     }
