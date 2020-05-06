@@ -5,6 +5,8 @@ import com.neves_eduardo.data_analysis_challenge.decoder.FileDecoder;
 import com.neves_eduardo.data_analysis_challenge.dto.Sale;
 import com.neves_eduardo.data_analysis_challenge.dto.SalesReport;
 import com.neves_eduardo.data_analysis_challenge.dto.Salesman;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.nio.file.Path;
 import java.util.Comparator;
@@ -13,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Service
 public class SalesReportDataInterpreter implements DataInterpreter {
     private FileDecoder salesReportFileDecoder;
     private FileDAO fileDAO;
@@ -21,7 +24,7 @@ public class SalesReportDataInterpreter implements DataInterpreter {
             "Salesman amount: %s \n" +
             "ID of the most expensive sale: %s \n" +
             "Worst salesman ever: %s \n";
-
+    @Autowired
     public SalesReportDataInterpreter(FileDecoder fileDecoder, FileDAO fileDAO) {
         this.salesReportFileDecoder = fileDecoder;
         this.fileDAO = fileDAO;

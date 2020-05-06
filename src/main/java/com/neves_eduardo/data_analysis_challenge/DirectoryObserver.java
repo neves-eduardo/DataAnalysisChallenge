@@ -6,19 +6,29 @@ import com.neves_eduardo.data_analysis_challenge.decoder.FileDecoder;
 import com.neves_eduardo.data_analysis_challenge.decoder.SalesReportFileDecoder;
 import com.neves_eduardo.data_analysis_challenge.service.DataInterpreter;
 import com.neves_eduardo.data_analysis_challenge.service.SalesReportDataInterpreter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Component
 public class DirectoryObserver {
     private static final Path INPUT_PATH = Paths.get(System.getenv("HOME").concat("/data/in/"));
     private static final Path OUTPUT_PATH = Paths.get(System.getenv("HOME").concat("/data/out/"));
     private List<Path> files;
-    private FileDAO fileDAO = new DatFileDAO(INPUT_PATH, OUTPUT_PATH);
-    private FileDecoder fileDecoder = new SalesReportFileDecoder(fileDAO);
-    private DataInterpreter dataInterpreter = new SalesReportDataInterpreter(fileDecoder,fileDAO);
+    private FileDAO fileDAO;
+    private FileDecoder fileDecoder;
+    private DataInterpreter dataInterpreter;
+
+    @Autowired
+    public DirectoryObserver(FileDAO fileDAO, FileDecoder fileDecoder, DataInterpreter dataInterpreter) {
+        this.fileDAO = fileDAO;
+        this.fileDecoder = fileDecoder;
+        this.dataInterpreter = dataInterpreter;
+    }
 
     public void appBoot() {
         try {

@@ -3,12 +3,15 @@ package com.neves_eduardo.data_analysis_challenge.decoder;
 import com.neves_eduardo.data_analysis_challenge.dao.FileDAO;
 import com.neves_eduardo.data_analysis_challenge.dto.*;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class SalesReportFileDecoder implements FileDecoder {
     private FileDAO fileDAO;
 
@@ -20,6 +23,8 @@ public class SalesReportFileDecoder implements FileDecoder {
     private static final int SPLIT_FIRST_ATTRIBUTE = 1;
     private static final int SPLIT_SECOND_ATTRIBUTE = 2;
     private static final int SPLIT_THIRD_ATTRIBUTE = 3;
+
+    @Autowired
     public SalesReportFileDecoder(FileDAO fileDAO) {
         this.fileDAO = fileDAO;
     }
