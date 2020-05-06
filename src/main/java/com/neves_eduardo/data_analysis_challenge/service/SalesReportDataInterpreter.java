@@ -5,6 +5,7 @@ import com.neves_eduardo.data_analysis_challenge.decoder.FileDecoder;
 import com.neves_eduardo.data_analysis_challenge.dto.Sale;
 import com.neves_eduardo.data_analysis_challenge.dto.SalesReport;
 import com.neves_eduardo.data_analysis_challenge.dto.Salesman;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 public class SalesReportDataInterpreter implements DataInterpreter {
     private FileDecoder salesReportFileDecoder;
     private FileDAO fileDAO;
+    private Logger logger = Logger.getLogger(SalesReport.class);
     private static final String OUTPUT_TEMPLATE
             = "Customer amount: %s \n" +
             "Salesman amount: %s \n" +
@@ -34,6 +36,7 @@ public class SalesReportDataInterpreter implements DataInterpreter {
 
     @Override
     public String analyzeData(Path path) {
+        logger.info("analyzing data from file: " + path);
         SalesReport salesReport = salesReportFileDecoder.decodeFile(path);
         int clients = salesReport.getCustomers().size();
         int salesmen = salesReport.getSalesmen().size();
