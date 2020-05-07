@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.List;
 import java.util.stream.Collectors;
+
 @Component
 public class DirectoryObserver {
     private static final Path INPUT_PATH = Paths.get(System.getenv("HOME").concat("/data/in/"));
@@ -49,22 +50,24 @@ public class DirectoryObserver {
 
 
     public void appCheckDirectory() {
-        try {
-            WatchService watchService = FileSystems.getDefault().newWatchService();
-            WatchKey watchKey = INPUT_PATH.register(watchService, StandardWatchEventKinds.ENTRY_CREATE);
-            while ((watchKey = watchService.take()) != null) {
-                for (WatchEvent<?> event : watchKey.pollEvents()) {
-                    Path newFilePath = Paths.get(INPUT_PATH.toString().concat("/" + event.context().toString()));
-                    logger.info("New File Detected: " + newFilePath);
-                     dataInterpreter.analyzeData(newFilePath);
+        if (Files.exists(INPUT_PATH)) {
+            try {
+                WatchService watchService = FileSystems.getDefault().newWatchService();
+                WatchKey watchKey = INPUT_PATH.register(watchService, StandardWatchEventKinds.ENTRY_CREATE);
+                while ((watchKey = watchService.take()) != null) {
+                    for (WatchEvent<?> event : watchKey.pollEvents()) {
+                        Path newFilePath = Paths.get(INPUT_PATH.toString().concat("/" + event.context().toString()));
+                        logger.info("New File Detected: " + newFilePath);
+                        dataInterpreter.analyzeData(newFilePath);
 
+                    }
+                    watchKey.reset();
                 }
-                watchKey.reset();
+
+            } catch (IllegalArgumentException | IOException | InterruptedException exception) {
+                logger.error(exception.getMessage());
+
             }
-
-        } catch (IllegalArgumentException | IOException | InterruptedException exception) {
-            logger.error(exception.getMessage());
-
         }
     }
 
