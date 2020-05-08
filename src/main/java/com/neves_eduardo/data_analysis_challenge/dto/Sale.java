@@ -3,6 +3,7 @@ package com.neves_eduardo.data_analysis_challenge.dto;
 import java.util.List;
 
 public class Sale {
+
     private int saleId;
     private List<Item> items;
     private String salesmanName;
@@ -39,4 +40,5 @@ public class Sale {
     public void setSalesmanName(String salesmanName) {
         this.salesmanName = salesmanName;
     }
+
 }

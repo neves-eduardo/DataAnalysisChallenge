@@ -1,6 +1,7 @@
 package com.neves_eduardo.data_analysis_challenge.dto;
 
 public class Salesman {
+
     private String cpf;
     private String name;
     private double salary;
@@ -37,4 +38,5 @@ public class Salesman {
     public void setSalary(double salary) {
         this.salary = salary;
     }
+
 }

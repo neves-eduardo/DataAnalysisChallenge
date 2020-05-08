@@ -22,6 +22,7 @@ import static org.mockito.Matchers.any;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SalesReportFileDecoderTest {
+
     @Mock
     FileDAO fileDAO;
     @InjectMocks

@@ -11,8 +11,10 @@ import java.nio.file.Paths;
 @Configuration
 @ComponentScan(basePackages = "com.neves_eduardo.data_analysis_challenge")
 public class AppConfig {
+
     @Bean
     public FileDAO datFileDAO() {
         return new DatFileDAO(Paths.get(System.getenv("HOME").concat("/data/in/")),Paths.get(System.getenv("HOME").concat("/data/out/")));
     }
+
 }
