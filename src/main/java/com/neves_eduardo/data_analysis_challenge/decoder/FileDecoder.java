@@ -7,5 +7,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 public interface FileDecoder {
+
     SalesReport decodeFile(Path file);
+
 }

@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class SalesReportFileDecoder implements FileDecoder {
+
     private FileDAO fileDAO;
     private Logger logger = Logger.getLogger(SalesReportFileDecoder.class);
     private static final char SEPARATOR = 'ç';

@@ -1,6 +1,7 @@
 package com.neves_eduardo.data_analysis_challenge.dto;
 
 public class Customer {
+
     private String cnpj;
     private String name;
     private String businessArea;
@@ -37,4 +38,5 @@ public class Customer {
     public void setBusinessArea(String businessArea) {
         this.businessArea = businessArea;
     }
+
 }

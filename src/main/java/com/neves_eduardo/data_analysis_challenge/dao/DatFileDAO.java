@@ -10,6 +10,7 @@ import java.util.List;
 
 
 public class DatFileDAO implements FileDAO {
+
     private final Path inputDirectory;
     private final Path outputDirectory;
     private static final String INPUT_FILE_FORMAT = ".dat";

@@ -1,15 +1,10 @@
 package com.neves_eduardo.data_analysis_challenge;
 
-import com.neves_eduardo.data_analysis_challenge.dao.DatFileDAO;
-import com.neves_eduardo.data_analysis_challenge.dao.FileDAO;
-import com.neves_eduardo.data_analysis_challenge.decoder.FileDecoder;
-import com.neves_eduardo.data_analysis_challenge.decoder.SalesReportFileDecoder;
 import com.neves_eduardo.data_analysis_challenge.service.DataInterpreter;
-import com.neves_eduardo.data_analysis_challenge.service.SalesReportDataInterpreter;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
+
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -18,18 +13,14 @@ import java.util.stream.Collectors;
 
 @Component
 public class DirectoryObserver {
+
     private static final Path INPUT_PATH = Paths.get(System.getenv("HOME").concat("/data/in/"));
-    private static final Path OUTPUT_PATH = Paths.get(System.getenv("HOME").concat("/data/out/"));
     private List<Path> files;
-    private FileDAO fileDAO;
-    private FileDecoder fileDecoder;
     private DataInterpreter dataInterpreter;
     private Logger logger = Logger.getLogger(DirectoryObserver.class);
 
     @Autowired
-    public DirectoryObserver(FileDAO fileDAO, FileDecoder fileDecoder, DataInterpreter dataInterpreter) {
-        this.fileDAO = fileDAO;
-        this.fileDecoder = fileDecoder;
+    public DirectoryObserver( DataInterpreter dataInterpreter) {
         this.dataInterpreter = dataInterpreter;
     }
 

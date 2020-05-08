@@ -1,6 +1,7 @@
 package com.neves_eduardo.data_analysis_challenge.dto;
 
 public class Item {
+
     private int id;
     private int quantity;
     private double price;
@@ -37,4 +38,5 @@ public class Item {
     public void setPrice(double price) {
         this.price = price;
     }
+
 }
